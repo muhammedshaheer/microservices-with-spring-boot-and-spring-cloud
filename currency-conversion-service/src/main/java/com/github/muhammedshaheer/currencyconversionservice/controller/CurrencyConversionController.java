@@ -1,6 +1,7 @@
 package com.github.muhammedshaheer.currencyconversionservice.controller;
 
 import com.github.muhammedshaheer.currencyconversionservice.dto.CurrencyConversion;
+import com.github.muhammedshaheer.currencyconversionservice.feign.CurrencyExchangeProxy;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +19,12 @@ import java.util.HashMap;
 @RestController
 public class CurrencyConversionController {
 
+    private final CurrencyExchangeProxy currencyExchangeProxy;
+
+    public CurrencyConversionController(CurrencyExchangeProxy currencyExchangeProxy) {
+        this.currencyExchangeProxy = currencyExchangeProxy;
+    }
+
     @GetMapping("/currency-conversion/from/{from}/to/{to}/quantity/{quantity}")
     public CurrencyConversion calculateCurrencyConversion(
             @PathVariable("from") String from,
@@ -30,6 +37,18 @@ public class CurrencyConversionController {
         ResponseEntity<CurrencyConversion> currencyConversionResponseEntity = new RestTemplate().
                 getForEntity("http://localhost:8000/currency-exchange/from/{from}/to/{to}", CurrencyConversion.class, uriVariables);
         CurrencyConversion currencyConversion = currencyConversionResponseEntity.getBody();
+        return new CurrencyConversion(currencyConversion.getId(), from, to, quantity,
+                currencyConversion.getConversionMultiple(), quantity.multiply(currencyConversion.getConversionMultiple()),
+                currencyConversion.getEnvironment());
+    }
+
+    @GetMapping("/currency-conversion-feign/from/{from}/to/{to}/quantity/{quantity}")
+    public CurrencyConversion calculateCurrencyConversionFeign(
+            @PathVariable("from") String from,
+            @PathVariable("to") String to,
+            @PathVariable("quantity") BigDecimal quantity
+    ) {
+        CurrencyConversion currencyConversion = currencyExchangeProxy.retrieveExchangeValue(from, to);
         return new CurrencyConversion(currencyConversion.getId(), from, to, quantity,
                 currencyConversion.getConversionMultiple(), quantity.multiply(currencyConversion.getConversionMultiple()),
                 currencyConversion.getEnvironment());
