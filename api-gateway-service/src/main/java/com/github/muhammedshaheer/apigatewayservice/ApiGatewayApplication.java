@@ -1,4 +1,4 @@
-package com.github.muhammedshaheer.apigateway;
+package com.github.muhammedshaheer.apigatewayservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

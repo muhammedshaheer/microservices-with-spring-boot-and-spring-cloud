@@ -1,4 +1,4 @@
-package com.github.muhammedshaheer.apigateway.middleware;
+package com.github.muhammedshaheer.apigatewayservice.middleware;
 
 
 import org.slf4j.Logger;

@@ -1,4 +1,4 @@
-package com.github.muhammedshaheer.apigateway.configuration;
+package com.github.muhammedshaheer.apigatewayservice.configuration;
 
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
