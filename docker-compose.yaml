@@ -5,7 +5,31 @@ services:
     image: muhammedshaheer/currency-exchange-service
     mem_limit: 700m
     ports:
-      - 8000:8000
+      - "8000:8000"
+    networks:
+      - currency-network
+    depends_on:
+      - naming-server
+    environment:
+      EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://naming-server:8761/eureka
+
+  currency-conversion-service:
+    image: muhammedshaheer/currency-conversion-service
+    mem_limit: 700m
+    ports:
+      - "8100:8100"
+    networks:
+      - currency-network
+    depends_on:
+      - naming-server
+    environment:
+      EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://naming-server:8761/eureka
+  
+  naming-server:
+    image: muhammedshaheer/naming-server
+    mem_limit: 700m
+    ports:
+      - "8761:8761"
     networks:
       - currency-network
 
