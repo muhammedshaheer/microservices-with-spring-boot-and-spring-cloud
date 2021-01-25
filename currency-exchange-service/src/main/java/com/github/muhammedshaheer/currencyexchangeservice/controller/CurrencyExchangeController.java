@@ -2,12 +2,13 @@ package com.github.muhammedshaheer.currencyexchangeservice.controller;
 
 import com.github.muhammedshaheer.currencyexchangeservice.dto.CurrencyExchange;
 import com.github.muhammedshaheer.currencyexchangeservice.repository.CurrencyExchangeRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.math.BigDecimal;
 import java.util.Optional;
 
 /**
@@ -17,6 +18,7 @@ import java.util.Optional;
 
 @RestController
 public class CurrencyExchangeController {
+    public static final Logger logger = LoggerFactory.getLogger(CurrencyExchangeController.class);
 
     private final CurrencyExchangeRepository currencyExchangeRepository;
     private final Environment environment;
@@ -31,6 +33,7 @@ public class CurrencyExchangeController {
             @PathVariable("from") String from,
             @PathVariable("to") String to
     ) {
+        logger.info("retrieveExchangeValue called with {} to {}", from, to);
         Optional<CurrencyExchange> currencyExchangeOptional = currencyExchangeRepository.findByFromAndTo(from, to);
         String port = "local.server.port";
         if (currencyExchangeOptional.isPresent()) {
